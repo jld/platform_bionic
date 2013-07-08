@@ -40,14 +40,15 @@
 
 syscall:
     mov     ip, sp
-    stmfd	sp!, {r4, r5, r6, r7}
+    stmfd	sp!, {r4, r5, r6, r7, fp, ip, lr}
+    add     fp, sp, #28
     mov     r7, r0
     mov     r0, r1
     mov     r1, r2
     mov     r2, r3
     ldmfd	ip, {r3, r4, r5, r6}
     swi     #0
-    ldmfd   sp!, {r4, r5, r6, r7}
+    ldmfd   sp!, {r4, r5, r6, r7, fp, ip, lr}
     movs    r0, r0
     bxpl    lr
     b       __set_syscall_errno
