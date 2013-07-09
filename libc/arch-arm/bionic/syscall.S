@@ -26,7 +26,7 @@
  * SUCH DAMAGE.
  */
 #include <sys/linux-syscalls.h>
-
+#include <machine/asm.h>
 
 	.text
 	.align 4
@@ -38,8 +38,9 @@
 
 #if __ARM_EABI__
 
-syscall:
+ENTRY(syscall)
     mov     ip, sp
+    .save	{r4, r5, r6, r7}
     stmfd	sp!, {r4, r5, r6, r7}
     mov     r7, r0
     mov     r0, r1
@@ -51,6 +52,7 @@ syscall:
     movs    r0, r0
     bxpl    lr
     b       __set_syscall_errno
+END(syscall)
 
 #else
 
