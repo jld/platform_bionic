@@ -39,11 +39,14 @@
 	.global bzero
 	.type bzero, %function
 
-bzero:
+ENTRY(bzero)
 	mov             r2, r1
 	mov             r1, #0	
-memset:
+END(bzero)
+
+ENTRY(memset)
 	push            {r0}
+	.save 		{r0}
 
 	cmp             r2, #6
 	bgt             .Lmemset_gt6
@@ -110,6 +113,8 @@ memset:
 	pop             {r0}
 	bx		lr
 
+	.fnend
+	.size memset, .-memset
 	.end
 #else   /* !(SCORPION_NEON_OPTIMIZATION || CORTEX_CACHE_LINE_32) */
 

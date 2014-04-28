@@ -69,8 +69,9 @@
 	.global memcpy
 	.type memcpy, %function
 	.align 5
-memcpy:
+ENTRY(memcpy)
 	stmfd	sp!, {r0, r9, r10, lr}
+	.save	{r0, r9, r10, lr}
 	cmp	r2, #4
 	blt	.Lneon_lt4
 	cmp	r2, #16
@@ -186,6 +187,7 @@ memcpy:
 .Lneon_exit:
 	ldmfd	sp!, {r0, r9, r10, lr}
 	bx	lr
+END(memcpy)
 	.end
 #elif defined(SCORPION_NEON_OPTIMIZATION)
 	/*
@@ -207,8 +209,9 @@ memcpy:
         .align 5
         .globl memcpy
         .func
-memcpy:
+ENTRY(memcpy):
 	push            {r0}
+	.save		{r0}
 	cmp             r2, #4
 	blt             .Lneon_lt4
 	cmp             r2, #16
@@ -292,7 +295,7 @@ memcpy:
 .Lneon_exit:
 	pop             {r0}
 	bx              lr
-	.endfunc
+END(memcpy)
 	.end
 #else /* !SCORPION_NEON_OPTIMIZATION */
 #if defined(CORTEX_CACHE_LINE_32)
@@ -310,8 +313,7 @@ memcpy:
 
 /* a prefetch distance of 4 cache-lines works best experimentally */
 #define CACHE_LINE_SIZE     32
-memcpy:
-        .fnstart
+ENTRY(memcpy)
         .save       {r0, lr}
         stmfd       sp!, {r0, lr}
 
@@ -420,7 +422,7 @@ memcpy:
 
         ldmfd       sp!, {r0, lr}
         bx          lr
-        .fnend
+END(memcpy)
 #else /*!CORTEX_CACHE_LINE_32*/
 
         .text
